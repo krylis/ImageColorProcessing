@@ -49,6 +49,12 @@
                   Hex Code:
                 </th>
               </tr>
+              {% for color in top_10_colors %}
+                <tr>
+                  <td style="background:{{ color }}"></td>
+                  <td>{{ color }}</td>
+                </tr>
+              {% endfor %}
             </table>
           </div>
 
