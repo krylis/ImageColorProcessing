@@ -2,7 +2,7 @@ import os
 from flask import Flask, render_template, flash, request, redirect, url_for
 from werkzeug.utils import secure_filename
 
-UPLOAD_FOLDER = 'uploads'
+UPLOAD_FOLDER = 'static/images'
 ALLOWED_EXTENSIONS = {'jpg', 'jpeg', 'png', 'gif'}
 
 app = Flask(__name__)
@@ -29,9 +29,14 @@ def home():
             return redirect(request.url)
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
-            file.save(os.path.join(app.config["UPLOAD_FOLDER"], filename))
+            fullpath = os.path.join(app.config["UPLOAD_FOLDER"], filename)
+            file.save(fullpath)
             flash(f"You successfully uploaded {file.filename}")
-            return render_template("index.html")
+            return render_template("index.html", image_path=fullpath, got_image=True)
+        elif file and not allowed_file(file.filename):
+            flash("You can only upload files with the following extensions: \t"
+                  "JPG, JPEG, GIF, PNG")
+            return redirect(request.url)
 
     return render_template("index.html")
 
